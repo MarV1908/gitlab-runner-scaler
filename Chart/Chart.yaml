@@ -1,0 +1,5 @@
+apiVersion: v2
+name: gitlab-runner-scaler
+description: Helm chart for GitLab Runner External Scaler for KEDA
+version: 0.1.0
+appVersion: "1.0"
