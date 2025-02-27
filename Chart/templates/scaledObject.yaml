@@ -1,0 +1,15 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: gitlab-runner-scaler
+spec:
+  scaleTargetRef:
+    name: gitlab-runner-scaler
+  minReplicaCount: {{ .Values.scaledObject.minReplicas }}
+  maxReplicaCount: {{ .Values.scaledObject.maxReplicas }}
+  triggers:
+    - type: external
+      metadata:
+        scalerAddress: http://gitlab-runner-scaler-service.default:{{ .Values.service.port }}
+        metricName: desired_runners
+        targetValue: "1"
