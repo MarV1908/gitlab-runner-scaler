@@ -1,0 +1,18 @@
+replicaCount: 1
+
+image:
+  repository: your-registry/gitlab-runner-scaler
+  tag: latest
+  pullPolicy: IfNotPresent
+
+gitlab:
+  token: ""
+  runnerID: ""
+  pendingJobsPerRunner: 10
+
+service:
+  port: 8080
+
+scaledObject:
+  minReplicas: 1
+  maxReplicas: 10
