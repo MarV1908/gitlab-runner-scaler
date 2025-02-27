@@ -12,32 +12,20 @@ spec:
       labels:
         app: gitlab-runner-scaler
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 65532  # Matches distroless:nonroot UID
-        runAsGroup: 65532
-        seccompProfile:
-          type: RuntimeDefault
-        fsGroup: 65532  # Only needed if you mount volumes that need write access
       containers:
         - name: scaler
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - containerPort: {{ .Values.service.port }}
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: true
           env:
+            - name: GITLAB_URL
+              value: "{{ .Values.gitlab.url | default "https://gitlab.com" }}"
             - name: GITLAB_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: gitlab-runner-scaler-secret
                   key: token
-            - name: GITLAB_RUNNER_ID
-              value: "{{ .Values.gitlab.runnerID }}"
+            - name: GITLAB_RUNNER_TAG
+              value: "{{ .Values.gitlab.runnerTag }}"
             - name: PENDING_JOBS_PER_RUNNER
-              value: "{{ .Values.gitlab.pendingJobsPerRunner }}"
-              
+              value: "{{ .Values.gitlab.pendingJobsPerRunner | default 10 }}"
